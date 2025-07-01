@@ -24,30 +24,20 @@ public class UserPayload {
     @JsonProperty("fullName")
     private String fullName;
 
-//    private String fullName;
-//    private String email;
-//    private String passwordRepeat;
-//    private String password;
+    public static class User {
+        @JsonProperty("id")
+        private String id;
 
-//    public UserPayload fullName(String fullName) {
-//        this.fullName = fullName;
-//        return this;
-//    }
-//
-//    public UserPayload email(String email) {
-//        this.email = email;
-//        return this;
-//    }
-//
-//    public UserPayload passwordRepeat(String passwordRepeat) {
-//        this.passwordRepeat = passwordRepeat;
-//        return this;
-//    }
-//
-//    public UserPayload password(String password) {
-//        this.password = password;
-//        return this;
-//    }
+        @JsonProperty("email")
+        private String email;
 
+        @JsonProperty("roles")
+        private String[] roles;
 
+        @JsonProperty("verified")
+        private Boolean verified;
+
+        @JsonProperty("banned")
+        private Boolean banned;
+    }
 }

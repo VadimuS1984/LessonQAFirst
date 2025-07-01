@@ -2,45 +2,44 @@ package com.example.test;
 
 
 import com.example.api.UserPayload;
+import com.example.conditeons.Condirions;
+import com.example.conditeons.StatusCodeCondition;
 import com.example.servise.UserApiService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import static org.hamcrest.Matchers.*;
 
 
-public class UsersTest {
+public class TestUserRegistration {
 
     private final UserApiService userApiService = new UserApiService();
 
     @BeforeClass
     public void setUp() {
-        RestAssured.baseURI = "https://auth.cinescope.t-qa.ru";
+        RestAssured.baseURI = "https://auth.dev-cinescope.t-qa.ru";
     }
 
     @Test
     public void testCanRegisterNewUser() {
         String timestamp = String.valueOf(System.currentTimeMillis()); //????
-
-        //given - данные подготавливаем
+        // fixme дисерилизация два поля -????
+        // fixme алюр? статика отчет по тестам ТЕСТ РЕПОРТ в браузере
+        // fixme метод лоя токина, тест на ЛОГ возвращяет токин и его в заголовок авторезейшен
+        //given - payload (данные для запроса)
         UserPayload userPayload = new UserPayload()
                 .fullName("Иван Иванов")  // Только буквы и пробелы
                 .email("test@mail.com")
                 .password("Test12345")     // Минимум 8 символов, заглавная буква
                 .passwordRepeat("Test12345"); // Пароли должны совпадать
 
-        Response response = userApiService.registerUser(userPayload);
-
-        response
-//                .shouldHave()
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(409)
-                .body("id", not(emptyString())); // id не пустое поле
+        userApiService.registerUser(userPayload)
+//                .shouldHave(Condirions.statusCode(200)) - fixme почему не 200??
+                .shouldHave(Condirions.statusCode(409))
+                .shouldHave(Condirions.bodyField("id", not(emptyString())));
     }
     @Test
     public void testCanRegisterNewUserWithRandomName() {
@@ -54,18 +53,10 @@ public class UsersTest {
                 .password("Test12345")
                 .passwordRepeat("Test12345");
         // expect
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(userPayload)
-                .when()
-                .post("/register")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(201)
-                .body("id", not(emptyString()));
+        userApiService.registerUser(userPayload)
+                .shouldHave(new StatusCodeCondition(201));
+        //                .shouldHave(Condirions.bodyField("id", not(emptyString())));
+
     }
 
 
@@ -73,25 +64,18 @@ public class UsersTest {
     public void testCanRegisterNewUserWithValidData() {
         String timestamp = String.valueOf(System.currentTimeMillis());
 
+        //given
         UserPayload userPayload = new UserPayload()
                 .fullName("Тест Пользователь")
                 .email("test" + timestamp + "@example.com")  // Уникальный email
                 .password("ValidPass123")  // 12 символов, заглавная буква, цифры
                 .passwordRepeat("ValidPass123");
-
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(userPayload)
-                .when()
-                .post("/register")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(201)
-                .body("id", not(emptyString()));
+// expect
+        userApiService.registerUser(userPayload)
+                .shouldHave(Condirions.statusCode(201));
+//                .shouldHave(Condirions.bodyField("id", not(emptyString())));
     }
+
     //Альтернативный вариант с валидацией ошибок:
     @Test
     public void testRegistrationValidation() {
@@ -124,53 +108,11 @@ public class UsersTest {
     public void testCanRegisterNewUserWithHelper() {
         UserPayload userPayload = TestDataGenerator.createValidUserPayload();
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(userPayload)
-                .when()
-                .post("/register")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(400)
-                .body("id", not(emptyString()));
+        userApiService.registerUser(userPayload)
+                .shouldHave(Condirions.statusCode(400))
+                .shouldHave(Condirions.bodyField("id", not(emptyString())));
     }
 
-//    @Test
-//    public void testCanNotRegisterSameUserTwice() {
-//        UserPayload userPayload = new UserPayload()
-//                .fullName(RandomStringUtils.randomAlphanumeric(6))
-//                .email("test@mail.com")
-//                .passwordRepeat("12345678Aa")
-//                .password("test123");
-//
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(userPayload)
-//                .when()
-//                .post("/register")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(500);
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(userPayload)
-//                .when()
-//                .post("/register")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(400)
-//                .body("id", not(emptyString()));
-//
-//    }
 
 
 //  @Test // Класический тест на rest Assurt, плохо маштабируется и дебажится

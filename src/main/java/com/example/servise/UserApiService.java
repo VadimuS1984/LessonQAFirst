@@ -7,21 +7,23 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 
-public class UserApiService  {
-//public class UserApiService extends ApiServise {
+public class UserApiService extends ApiServise {
     // пишем сюда все что свчзанно с User
-    public Response registerUser(UserPayload userPayload) {
-        return RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
+    public AssertableResponse registerUser(UserPayload userPayload) {
+        return new AssertableResponse(setup()
                 .body(userPayload)
                 .when()
-                .post("/register");
+                .post("/register"));
     }
-//    return new AssertableResponse(
-//                .body(userPayload)
-//                .when()
-//                .post("/register"));
-//    }
+
+    /**
+     * @param userPayload
+     * @return new AssertableResponse
+     */
+    public AssertableResponse loginUser(UserPayload userPayload) {
+        return new AssertableResponse(setup()
+                .body(userPayload)
+                .when()
+                .post("/login"));
+    }
 }
