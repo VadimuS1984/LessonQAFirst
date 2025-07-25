@@ -5,6 +5,7 @@ import com.example.api.UserPayload;
 import com.example.assertions.AssertableResponse;
 import com.example.conditeons.Conditions;
 import com.example.conditeons.StatusCodeCondition;
+import com.example.constants.HttpStatusCodes;
 import com.example.servise.UserApiService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,12 +20,7 @@ public class TestUserRegistration {
 
     private final UserApiService userApiService = new UserApiService();
 
-    // Ожидаемые статус-коды
-    private static final int STATUS_CREATED = 201;
-    private static final int STATUS_BAD_REQUEST = 400;
-    private static final int STATUS_CONFLICT = 409;
-
-    @BeforeClass
+        @BeforeClass
     public void setUp() {
         RestAssured.baseURI = "https://auth.dev-cinescope.t-qa.ru";
     }
@@ -55,7 +51,7 @@ public class TestUserRegistration {
 
 
         // Ожидаем конфликт, так как email уже существует
-        registerUser(userPayload, STATUS_CONFLICT)
+        registerUser(userPayload, HttpStatusCodes.CONFLICT)
                 .shouldHave(Conditions.bodyField("id", not(emptyString())));
 
 //        userApiService.registerUser(userPayload)
@@ -76,7 +72,7 @@ public class TestUserRegistration {
                 .passwordRepeat("Test12345");
         // expect
         // Ожидаем успешное создание
-        registerUser(userPayload, STATUS_CREATED)
+        registerUser(userPayload, HttpStatusCodes.CREATED)
                 .shouldHave(Conditions.bodyField("id", not(emptyString())));
 
 //        userApiService.registerUser(userPayload)
@@ -98,7 +94,7 @@ public class TestUserRegistration {
                 .passwordRepeat("ValidPass123");
         // expect
         // Ожидаем успешное создание
-        registerUser(userPayload, STATUS_CREATED)
+        registerUser(userPayload, HttpStatusCodes.CREATED)
                 .shouldHave(Conditions.bodyField("id", not(emptyString())));
 //        userApiService.registerUser(userPayload)
 //                .shouldHave(Conditions.statusCode(201));
@@ -115,7 +111,7 @@ public class TestUserRegistration {
                 .passwordRepeat("test123"); // Пароли не совпадают
 
         // Ожидаем ошибку валидации
-        registerUser(userPayload, STATUS_BAD_REQUEST)
+        registerUser(userPayload, HttpStatusCodes.BAD_REQUEST)
                 .shouldHave(Conditions.bodyField("message", hasItems(
                         "Поле ФИО должно содержать только буквы и пробелы",
                         "Пароль должен содержать хотя бы одну заглавную букву",
@@ -148,7 +144,7 @@ public class TestUserRegistration {
 
 
         // Ожидаем успешное создание
-        registerUser(userPayload, STATUS_CREATED)
+        registerUser(userPayload, HttpStatusCodes.CREATED)
                 .shouldHave(Conditions.bodyField("id", not(emptyString())));
 
 //        userApiService.registerUser(userPayload)

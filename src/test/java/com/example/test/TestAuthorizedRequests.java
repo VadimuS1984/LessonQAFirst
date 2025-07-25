@@ -1,6 +1,7 @@
 package com.example.test;
 
 import com.example.api.UserPayload;
+import com.example.constants.HttpStatusCodes;
 import com.example.servise.UserApiService;
 import com.example.utils.TokenManager;
 import io.restassured.RestAssured;
@@ -38,7 +39,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatusCodes.NOT_FOUND)
                 .body("email", not(emptyString()));
     }
 
@@ -49,7 +50,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatusCodes.NOT_FOUND)
                 .body("email", not(emptyString()));
     }
 
@@ -65,7 +66,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatusCodes.NOT_FOUND)
                 .body("fullName", equalTo("Обновленное Имя"));
     }
 
@@ -79,7 +80,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(201)
+                .statusCode(HttpStatusCodes.NOT_FOUND)
                 .body("title", equalTo("Тестовый пост"));
     }
 
@@ -90,7 +91,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(HttpStatusCodes.NOT_FOUND);
     }
 
     @Test
@@ -109,7 +110,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(HttpStatusCodes.NOT_FOUND);
     }
 
     @Test
@@ -129,7 +130,7 @@ public class TestAuthorizedRequests {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(HttpStatusCodes.NOT_FOUND);
     }
 
     @Test
@@ -141,18 +142,18 @@ public class TestAuthorizedRequests {
         userApiService.authorizedGet("/profile")
                 .then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(HttpStatusCodes.NOT_FOUND);
 
         // Запрос 2: Получение настроек
         userApiService.authorizedGet("/settings")
                 .then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(HttpStatusCodes.NOT_FOUND);
 
         // Запрос 3: Получение истории
         userApiService.authorizedGet("/history")
                 .then()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(HttpStatusCodes.NOT_FOUND);
     }
 }

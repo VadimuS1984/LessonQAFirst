@@ -2,6 +2,7 @@ package com.example.test;
 
 import com.example.api.LoginRequest;
 import com.example.conditeons.Conditions;
+import com.example.constants.HttpStatusCodes;
 import com.example.servise.UserApiService;
 import com.example.utils.TokenManager;
 import io.restassured.RestAssured;
@@ -30,7 +31,7 @@ public class TestUserLogin {
                 .password("12345678Aa");
         // expect
         userApiService.loginUser(loginRequest)
-                .shouldHave(Conditions.statusCode(200))
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.OK))
                 .shouldHave(Conditions.bodyField("user.id", not(emptyString())))
                 .shouldHave(Conditions.bodyField("user.email", equalTo("test@email.com")))
                 .shouldHave(Conditions.bodyField("user.roles", hasItem("USER")))
@@ -108,7 +109,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(401) // Ожидаем 401, так как пользователь не зарегистрирован
+                .statusCode(HttpStatusCodes.UNAUTHORIZED) // Ожидаем 401, так как пользователь не зарегистрирован
                 .body("message", equalTo("Не верный логин или пароль"));
     }
 
@@ -128,7 +129,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(400)
+                .statusCode(HttpStatusCodes.BAD_REQUEST)
                 .body("message", equalTo("Неверные данные"));
     }
 
@@ -148,7 +149,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(400)
+                .statusCode(HttpStatusCodes.BAD_REQUEST)
                 .body("message", equalTo("Неверные данные"));
     }
 
@@ -208,7 +209,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(400)
+                .statusCode(HttpStatusCodes.BAD_REQUEST)
                 .body("message", equalTo("Неверные данные"));
     }
 
@@ -227,7 +228,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(400)
+                .statusCode(HttpStatusCodes.BAD_REQUEST)
                 .body("message", equalTo("Неверные данные"));
     }
 
@@ -247,7 +248,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatusCodes.OK)
                 .body("user", notNullValue())
                 .body("user.id", not(emptyString()))
                 .body("user.email", not(emptyString()))
@@ -275,7 +276,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(403)
+                .statusCode(HttpStatusCodes.FORBIDDEN)
                 .body("message", equalTo("Пользователь не подтверждён"));
     }
 
@@ -296,7 +297,7 @@ public class TestUserLogin {
                 .then()
                 .log().all()
                 .assertThat()
-                .statusCode(403)
+                .statusCode(HttpStatusCodes.FORBIDDEN)
                 .body("message", equalTo("Пользователь заблокирован"));
     }
 }
