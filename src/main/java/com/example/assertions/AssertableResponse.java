@@ -7,13 +7,23 @@ import lombok.RequiredArgsConstructor;
 
 
 // С Loombok, конструкто автоматически формируется
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class AssertableResponse {
     private final Response response;
+
+    // Конструктор для инициализации response
+    public AssertableResponse(Response response) {
+        this.response = response;
+    }
 
     public AssertableResponse shouldHave(Condition conditeon) {
         conditeon.check(response);
         return this;
+    }
+
+    // Добавляем метод для получения оригинального Response
+    public Response response() {
+        return this.response;
     }
 }
 

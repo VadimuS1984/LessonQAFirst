@@ -24,20 +24,20 @@ public class UserPayload {
     @JsonProperty("fullName")
     private String fullName;
 
-    public static class User {
-        @JsonProperty("id")
-        private String id;
-
-        @JsonProperty("email")
-        private String email;
-
-        @JsonProperty("roles")
-        private String[] roles;
-
-        @JsonProperty("verified")
-        private Boolean verified;
-
-        @JsonProperty("banned")
-        private Boolean banned;
-    }
+//    public static class User {
+//        @JsonProperty("id")
+//        private String id;
+//
+//        @JsonProperty("email")
+//        private String email;
+//
+//        @JsonProperty("roles")
+//        private String[] roles;
+//
+//        @JsonProperty("verified")
+//        private Boolean verified;
+//
+//        @JsonProperty("banned")
+//        private Boolean banned;
+//    }
 }

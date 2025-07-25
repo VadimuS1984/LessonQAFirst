@@ -2,7 +2,8 @@ package com.example.test;
 
 
 import com.example.api.UserPayload;
-import com.example.conditeons.Condirions;
+import com.example.assertions.AssertableResponse;
+import com.example.conditeons.Conditions;
 import com.example.conditeons.StatusCodeCondition;
 import com.example.servise.UserApiService;
 import io.restassured.RestAssured;
@@ -18,9 +19,25 @@ public class TestUserRegistration {
 
     private final UserApiService userApiService = new UserApiService();
 
+    // Ожидаемые статус-коды
+    private static final int STATUS_CREATED = 201;
+    private static final int STATUS_BAD_REQUEST = 400;
+    private static final int STATUS_CONFLICT = 409;
+
     @BeforeClass
     public void setUp() {
         RestAssured.baseURI = "https://auth.dev-cinescope.t-qa.ru";
+    }
+
+    /**
+     * Вспомогательный метод для регистрации пользователя через RestAssured
+     * @param userPayload данные пользователя
+     * @param expectedStatusCode ожидаемый статус-код
+     * @return AssertableResponse с результатом запроса
+     */
+    private AssertableResponse registerUser(UserPayload userPayload, int expectedStatusCode) {
+        return userApiService.registerUser(userPayload)
+                .shouldHave(Conditions.statusCode(expectedStatusCode));
     }
 
     @Test
@@ -36,10 +53,15 @@ public class TestUserRegistration {
                 .password("Test12345")     // Минимум 8 символов, заглавная буква
                 .passwordRepeat("Test12345"); // Пароли должны совпадать
 
-        userApiService.registerUser(userPayload)
-//                .shouldHave(Condirions.statusCode(200)) - fixme почему не 200??
-                .shouldHave(Condirions.statusCode(409))
-                .shouldHave(Condirions.bodyField("id", not(emptyString())));
+
+        // Ожидаем конфликт, так как email уже существует
+        registerUser(userPayload, STATUS_CONFLICT)
+                .shouldHave(Conditions.bodyField("id", not(emptyString())));
+
+//        userApiService.registerUser(userPayload)
+////                .shouldHave(Condirions.statusCode(200)) - fixme почему не 200??
+//                .shouldHave(Conditions.statusCode(409))
+//                .shouldHave(Conditions.bodyField("id", not(emptyString())));
     }
     @Test
     public void testCanRegisterNewUserWithRandomName() {
@@ -53,9 +75,13 @@ public class TestUserRegistration {
                 .password("Test12345")
                 .passwordRepeat("Test12345");
         // expect
-        userApiService.registerUser(userPayload)
-                .shouldHave(new StatusCodeCondition(201));
-        //                .shouldHave(Condirions.bodyField("id", not(emptyString())));
+        // Ожидаем успешное создание
+        registerUser(userPayload, STATUS_CREATED)
+                .shouldHave(Conditions.bodyField("id", not(emptyString())));
+
+//        userApiService.registerUser(userPayload)
+//                .shouldHave(new StatusCodeCondition(201));
+//        //                .shouldHave(Condirions.bodyField("id", not(emptyString())));
 
     }
 
@@ -70,10 +96,13 @@ public class TestUserRegistration {
                 .email("test" + timestamp + "@example.com")  // Уникальный email
                 .password("ValidPass123")  // 12 символов, заглавная буква, цифры
                 .passwordRepeat("ValidPass123");
-// expect
-        userApiService.registerUser(userPayload)
-                .shouldHave(Condirions.statusCode(201));
-//                .shouldHave(Condirions.bodyField("id", not(emptyString())));
+        // expect
+        // Ожидаем успешное создание
+        registerUser(userPayload, STATUS_CREATED)
+                .shouldHave(Conditions.bodyField("id", not(emptyString())));
+//        userApiService.registerUser(userPayload)
+//                .shouldHave(Conditions.statusCode(201));
+////                .shouldHave(Condirions.bodyField("id", not(emptyString())));
     }
 
     //Альтернативный вариант с валидацией ошибок:
@@ -85,32 +114,46 @@ public class TestUserRegistration {
                 .password("test")      // Неправильный пароль (короткий, без заглавной)
                 .passwordRepeat("test123"); // Пароли не совпадают
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(userPayload)
-                .when()
-                .post("/register")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(400)
-                .body("message", hasItems(
+        // Ожидаем ошибку валидации
+        registerUser(userPayload, STATUS_BAD_REQUEST)
+                .shouldHave(Conditions.bodyField("message", hasItems(
                         "Поле ФИО должно содержать только буквы и пробелы",
                         "Пароль должен содержать хотя бы одну заглавную букву",
                         "Минимальная длина пароля 8 символов",
                         "Пароли не совпадают"
-                ));
+                )));
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(userPayload)
+//                .when()
+//                .post("/register")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(400)
+//                .body("message", hasItems(
+//                        "Поле ФИО должно содержать только буквы и пробелы",
+//                        "Пароль должен содержать хотя бы одну заглавную букву",
+//                        "Минимальная длина пароля 8 символов",
+//                        "Пароли не совпадают"
+//                ));
     }
     // Использование утилитного метода: (смотри класс TestDataGenerator)
     @Test
     public void testCanRegisterNewUserWithHelper() {
+        // Используем TestDataGenerator для создания валидных данных
         UserPayload userPayload = TestDataGenerator.createValidUserPayload();
 
-        userApiService.registerUser(userPayload)
-                .shouldHave(Condirions.statusCode(400))
-                .shouldHave(Condirions.bodyField("id", not(emptyString())));
+
+        // Ожидаем успешное создание
+        registerUser(userPayload, STATUS_CREATED)
+                .shouldHave(Conditions.bodyField("id", not(emptyString())));
+
+//        userApiService.registerUser(userPayload)
+//                .shouldHave(Conditions.statusCode(400))
+//                .shouldHave(Conditions.bodyField("id", not(emptyString())));
     }
 
 

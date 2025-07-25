@@ -6,7 +6,7 @@ import org.hamcrest.Matcher;
 
 
 @UtilityClass
-public class Condirions {
+public class Conditions {
 
     public StatusCodeCondition statusCode(int code) {
         return new StatusCodeCondition(code);

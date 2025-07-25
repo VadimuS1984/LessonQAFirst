@@ -11,4 +11,12 @@ public class ApiServise {
                 .contentType(ContentType.JSON)
                 .log().all();
     }
+
+    protected RequestSpecification setupWithAuth(String token) {
+        return RestAssured
+                .given()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .log().all();
+    }
 }
