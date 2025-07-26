@@ -38,24 +38,30 @@ public class TestUserRegistration {
 
     @Test
     public void testCanRegisterNewUser() {
-        String timestamp = String.valueOf(System.currentTimeMillis()); //????
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String uniqueEmail = "testVP" + timestamp + "@mail.com";
         // fixme дисерилизация два поля -????
         // fixme алюр? статика отчет по тестам ТЕСТ РЕПОРТ в браузере
         // fixme метод лоя токина, тест на ЛОГ возвращяет токин и его в заголовок авторезейшен
         //given - payload (данные для запроса)
         UserPayload userPayload = new UserPayload()
-                .fullName("Иван Иванов")  // Только буквы и пробелы
-                .email("test@mail.com")
+                .fullName("Вадим Порохов")  // Только буквы и пробелы
+                .email("testVP1@mail.com")
+//                .email(uniqueEmail) // Уникальное имя
                 .password("Test12345")     // Минимум 8 символов, заглавная буква
                 .passwordRepeat("Test12345"); // Пароли должны совпадать
 
+        // 1. Первая регистрация - должна быть успешной
+        registerUser(userPayload, HttpStatusCodes.CREATED)
+                .shouldHave(Conditions.bodyField("id", not(emptyString())))
+                .shouldHave(Conditions.bodyField("email", equalTo("testVP1@mail.com")));
 
+        // 2. Повторная регистрация с тем же email - должна вернуть конфликт
         // Ожидаем конфликт, так как email уже существует
-        registerUser(userPayload, HttpStatusCodes.CONFLICT)
-                .shouldHave(Conditions.bodyField("id", not(emptyString())));
+        registerUser(userPayload, HttpStatusCodes.CONFLICT);
 
 //        userApiService.registerUser(userPayload)
-////                .shouldHave(Condirions.statusCode(200)) - fixme почему не 200??
+////                .shouldHave(Condirions.statusCode(200)) - fixme
 //                .shouldHave(Conditions.statusCode(409))
 //                .shouldHave(Conditions.bodyField("id", not(emptyString())));
     }
@@ -139,9 +145,9 @@ public class TestUserRegistration {
     // Использование утилитного метода: (смотри класс TestDataGenerator)
     @Test
     public void testCanRegisterNewUserWithHelper() {
+
         // Используем TestDataGenerator для создания валидных данных
         UserPayload userPayload = TestDataGenerator.createValidUserPayload();
-
 
         // Ожидаем успешное создание
         registerUser(userPayload, HttpStatusCodes.CREATED)

@@ -14,7 +14,7 @@ public class TestDataGenerator {
     }
 
     public static String generateUniqueEmail() {
-        return "test" + System.currentTimeMillis() + "@example.com";
+        return "test" + RandomStringUtils.randomNumeric(3) + "@example.com";
     }
 
     public static UserPayload createValidUserPayload() {

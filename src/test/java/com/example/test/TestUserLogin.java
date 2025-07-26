@@ -27,13 +27,13 @@ public class TestUserLogin {
 
         //given - payload (данные для запроса)
         LoginRequest loginRequest = new LoginRequest()
-                .email("test@email.com")
-                .password("12345678Aa");
+                .email("testVP1@email.com")
+                .password("Test12345");
         // expect
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.OK))
                 .shouldHave(Conditions.bodyField("user.id", not(emptyString())))
-                .shouldHave(Conditions.bodyField("user.email", equalTo("test@email.com")))
+                .shouldHave(Conditions.bodyField("user.email", equalTo("testVP1@email.com")))
                 .shouldHave(Conditions.bodyField("user.roles", hasItem("USER")))
                 .shouldHave(Conditions.bodyField("user.verified", equalTo(true)))
                 .shouldHave(Conditions.bodyField("user.banned", equalTo(false)))
