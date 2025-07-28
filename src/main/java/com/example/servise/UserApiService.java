@@ -1,12 +1,9 @@
 package com.example.servise;
 
 import com.example.api.LoginRequest;
-import com.example.api.LoginResponse;
 import com.example.api.UserPayload;
 import com.example.assertions.AssertableResponse;
 import com.example.utils.TokenManager;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import lombok.RequiredArgsConstructor;
 

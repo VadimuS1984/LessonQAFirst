@@ -1,9 +1,7 @@
 package com.example.assertions;
 
-//import lombok.RequiredArgsConstructor;
 import io.restassured.response.Response;
 import com.example.conditeons.Condition;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 

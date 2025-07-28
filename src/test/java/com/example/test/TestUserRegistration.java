@@ -4,11 +4,9 @@ package com.example.test;
 import com.example.api.UserPayload;
 import com.example.assertions.AssertableResponse;
 import com.example.conditeons.Conditions;
-import com.example.conditeons.StatusCodeCondition;
 import com.example.constants.HttpStatusCodes;
 import com.example.servise.UserApiService;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -102,9 +100,6 @@ public class TestUserRegistration {
         // Ожидаем успешное создание
         registerUser(userPayload, HttpStatusCodes.CREATED)
                 .shouldHave(Conditions.bodyField("id", not(emptyString())));
-//        userApiService.registerUser(userPayload)
-//                .shouldHave(Conditions.statusCode(201));
-////                .shouldHave(Condirions.bodyField("id", not(emptyString())));
     }
 
     //Альтернативный вариант с валидацией ошибок:
@@ -124,23 +119,6 @@ public class TestUserRegistration {
                         "Минимальная длина пароля 8 символов",
                         "Пароли не совпадают"
                 )));
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(userPayload)
-//                .when()
-//                .post("/register")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(400)
-//                .body("message", hasItems(
-//                        "Поле ФИО должно содержать только буквы и пробелы",
-//                        "Пароль должен содержать хотя бы одну заглавную букву",
-//                        "Минимальная длина пароля 8 символов",
-//                        "Пароли не совпадают"
-//                ));
     }
     // Использование утилитного метода: (смотри класс TestDataGenerator)
     @Test
@@ -152,32 +130,7 @@ public class TestUserRegistration {
         // Ожидаем успешное создание
         registerUser(userPayload, HttpStatusCodes.CREATED)
                 .shouldHave(Conditions.bodyField("id", not(emptyString())));
-
-//        userApiService.registerUser(userPayload)
-//                .shouldHave(Conditions.statusCode(400))
-//                .shouldHave(Conditions.bodyField("id", not(emptyString())));
     }
-
-
-
-//  @Test // Класический тест на rest Assurt, плохо маштабируется и дебажится
-//  void testCanRegisterNewUser1() {
-//      UserPayload user = new UserPayload()
-//                .fullName("RandomStringUtils.randomAlphanumeric(6)")
-//              .email("test@mail.com")
-//              .passwordRepeat("12345678Aa")
-//              .password("test123");
-//  RestAssured
-//  .given().contentType(ContentType.JSON).log().all()
-//  .body(user)
-//  .when()
-//  .post("register")
-//  .then().log().all()
-//  .assertThat()
-//  .statusCode(200)
-//  .body("id", not(isEmptyString()));
-//  }
-
 }
 
 

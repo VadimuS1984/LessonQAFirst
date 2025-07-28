@@ -6,7 +6,6 @@ import com.example.constants.HttpStatusCodes;
 import com.example.servise.UserApiService;
 import com.example.utils.TokenManager;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -102,19 +101,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.UNAUTHORIZED)) // Ожидаем 401, так как пользователь не зарегистрирован
                 .shouldHave(Conditions.bodyField("message", equalTo("Не верный логин или пароль")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.UNAUTHORIZED) // Ожидаем 401, так как пользователь не зарегистрирован
-//                .body("message", equalTo("Не верный логин или пароль"));
     }
 
     @Test
@@ -125,19 +111,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
                 .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.BAD_REQUEST)
-//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -149,19 +122,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
                 .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.BAD_REQUEST)
-//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -172,19 +132,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.UNAUTHORIZED))
                 .shouldHave(Conditions.bodyField("message", equalTo("Не верный логин или пароль")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(401)
-//                .body("message", equalTo("Не верный логин или пароль"));
     }
 
     @Test
@@ -196,19 +143,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.NOT_FOUND))
                 .shouldHave(Conditions.bodyField("message", equalTo("Пользователь не найден")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(404)
-//                .body("message", equalTo("Пользователь не найден"));
     }
 
     @Test
@@ -220,19 +154,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
                 .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
-
-        //        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.BAD_REQUEST)
-//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -243,19 +164,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
                 .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.BAD_REQUEST)
-//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -274,26 +182,6 @@ public class TestUserLogin {
                 .shouldHave(Conditions.bodyField("user.banned", notNullValue()))
                 .shouldHave(Conditions.bodyField("accessToken", not(emptyString())))
                 .shouldHave(Conditions.bodyField("expiresIn", not(empty())));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.OK)
-//                .body("user", notNullValue())
-//                .body("user.id", not(emptyString()))
-//                .body("user.email", not(emptyString()))
-//                .body("user.roles", not(empty()))
-//                .body("user.verified", notNullValue())
-//                .body("user.banned", notNullValue())
-//                .body("accessToken", not(emptyString()))
-//                .body("expiresIn", notNullValue());
     }
 
     @Test
@@ -305,19 +193,6 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.FORBIDDEN))
                 .shouldHave(Conditions.bodyField("message", equalTo("Пользователь не подтверждён")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.FORBIDDEN)
-//                .body("message", equalTo("Пользователь не подтверждён"));
     }
 
     @Test
@@ -329,18 +204,5 @@ public class TestUserLogin {
         userApiService.loginUser(loginRequest)
                 .shouldHave(Conditions.statusCode(HttpStatusCodes.FORBIDDEN))
                 .shouldHave(Conditions.bodyField("message", equalTo("Пользователь заблокирован")));
-
-//        RestAssured
-//                .given()
-//                .contentType(ContentType.JSON)
-//                .log().all()
-//                .body(loginRequest)
-//                .when()
-//                .post("/login")
-//                .then()
-//                .log().all()
-//                .assertThat()
-//                .statusCode(HttpStatusCodes.FORBIDDEN)
-//                .body("message", equalTo("Пользователь заблокирован"));
     }
 }
