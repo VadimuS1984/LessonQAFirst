@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.*;
 public class TestUserRegistration {
 
     private final UserApiService userApiService = new UserApiService();
-
+//private final Faker
         @BeforeClass
     public void setUp() {
         RestAssured.baseURI = "https://auth.dev-cinescope.t-qa.ru";

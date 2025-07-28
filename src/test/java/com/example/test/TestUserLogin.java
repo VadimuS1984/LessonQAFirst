@@ -99,18 +99,22 @@ public class TestUserLogin {
                 .email(randomEmail)
                 .password(validPassword);
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.UNAUTHORIZED) // Ожидаем 401, так как пользователь не зарегистрирован
-                .body("message", equalTo("Не верный логин или пароль"));
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.UNAUTHORIZED)) // Ожидаем 401, так как пользователь не зарегистрирован
+                .shouldHave(Conditions.bodyField("message", equalTo("Не верный логин или пароль")));
+
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.UNAUTHORIZED) // Ожидаем 401, так как пользователь не зарегистрирован
+//                .body("message", equalTo("Не верный логин или пароль"));
     }
 
     @Test
@@ -118,19 +122,22 @@ public class TestUserLogin {
         LoginRequest loginRequest = new LoginRequest()
                 .email("invalid-email")
                 .password("12345678Aa");
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
+                .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.BAD_REQUEST)
-                .body("message", equalTo("Неверные данные"));
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.BAD_REQUEST)
+//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -139,18 +146,22 @@ public class TestUserLogin {
                 .email("test@email.com")
                 .password("123");
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.BAD_REQUEST)
-                .body("message", equalTo("Неверные данные"));
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
+                .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
+
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.BAD_REQUEST)
+//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -158,19 +169,22 @@ public class TestUserLogin {
         LoginRequest loginRequest = new LoginRequest()
                 .email("test@email.com")
                 .password("WrongPassword123");
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.UNAUTHORIZED))
+                .shouldHave(Conditions.bodyField("message", equalTo("Не верный логин или пароль")));
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(401)
-                .body("message", equalTo("Не верный логин или пароль"));
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(401)
+//                .body("message", equalTo("Не верный логин или пароль"));
     }
 
     @Test
@@ -179,18 +193,22 @@ public class TestUserLogin {
                 .email("nonexistent@email.com")
                 .password("12345678Aa");
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(404)
-                .body("message", equalTo("Пользователь не найден"));
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.NOT_FOUND))
+                .shouldHave(Conditions.bodyField("message", equalTo("Пользователь не найден")));
+
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(404)
+//                .body("message", equalTo("Пользователь не найден"));
     }
 
     @Test
@@ -199,18 +217,22 @@ public class TestUserLogin {
                 .email("")
                 .password("");
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.BAD_REQUEST)
-                .body("message", equalTo("Неверные данные"));
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
+                .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
+
+        //        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.BAD_REQUEST)
+//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -218,18 +240,22 @@ public class TestUserLogin {
         // Создаем payload без установки email и password (null значения)
         LoginRequest loginRequest = new LoginRequest();
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.BAD_REQUEST)
-                .body("message", equalTo("Неверные данные"));
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.BAD_REQUEST))
+                .shouldHave(Conditions.bodyField("message", equalTo("Неверные данные")));
+
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.BAD_REQUEST)
+//                .body("message", equalTo("Неверные данные"));
     }
 
     @Test
@@ -238,25 +264,36 @@ public class TestUserLogin {
                 .email("test@email.com")
                 .password("12345678Aa");
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.OK)
-                .body("user", notNullValue())
-                .body("user.id", not(emptyString()))
-                .body("user.email", not(emptyString()))
-                .body("user.roles", not(empty()))
-                .body("user.verified", notNullValue())
-                .body("user.banned", notNullValue())
-                .body("accessToken", not(emptyString()))
-                .body("expiresIn", notNullValue());
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.OK))
+                .shouldHave(Conditions.bodyField("user", notNullValue()))
+                .shouldHave(Conditions.bodyField("user.id", not(emptyString())))
+                .shouldHave(Conditions.bodyField("user.email", not(emptyString())))
+                .shouldHave(Conditions.bodyField("user.roles", not(empty())))
+                .shouldHave(Conditions.bodyField("user.verified", notNullValue()))
+                .shouldHave(Conditions.bodyField("user.banned", notNullValue()))
+                .shouldHave(Conditions.bodyField("accessToken", not(emptyString())))
+                .shouldHave(Conditions.bodyField("expiresIn", not(empty())));
+
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.OK)
+//                .body("user", notNullValue())
+//                .body("user.id", not(emptyString()))
+//                .body("user.email", not(emptyString()))
+//                .body("user.roles", not(empty()))
+//                .body("user.verified", notNullValue())
+//                .body("user.banned", notNullValue())
+//                .body("accessToken", not(emptyString()))
+//                .body("expiresIn", notNullValue());
     }
 
     @Test
@@ -265,19 +302,22 @@ public class TestUserLogin {
         LoginRequest loginRequest = new LoginRequest()
                 .email("unverified@email.com")
                 .password("12345678Aa");
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.FORBIDDEN))
+                .shouldHave(Conditions.bodyField("message", equalTo("Пользователь не подтверждён")));
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.FORBIDDEN)
-                .body("message", equalTo("Пользователь не подтверждён"));
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.FORBIDDEN)
+//                .body("message", equalTo("Пользователь не подтверждён"));
     }
 
     @Test
@@ -286,18 +326,21 @@ public class TestUserLogin {
         LoginRequest loginRequest = new LoginRequest()
                 .email("banned@email.com")
                 .password("12345678Aa");
+        userApiService.loginUser(loginRequest)
+                .shouldHave(Conditions.statusCode(HttpStatusCodes.FORBIDDEN))
+                .shouldHave(Conditions.bodyField("message", equalTo("Пользователь заблокирован")));
 
-        RestAssured
-                .given()
-                .contentType(ContentType.JSON)
-                .log().all()
-                .body(loginRequest)
-                .when()
-                .post("/login")
-                .then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatusCodes.FORBIDDEN)
-                .body("message", equalTo("Пользователь заблокирован"));
+//        RestAssured
+//                .given()
+//                .contentType(ContentType.JSON)
+//                .log().all()
+//                .body(loginRequest)
+//                .when()
+//                .post("/login")
+//                .then()
+//                .log().all()
+//                .assertThat()
+//                .statusCode(HttpStatusCodes.FORBIDDEN)
+//                .body("message", equalTo("Пользователь заблокирован"));
     }
 }
