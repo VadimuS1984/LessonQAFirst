@@ -38,7 +38,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.19.0")
 
     // https://mvnrepository.com/artifact/com.github.javafaker/javafaker fixme не работает
-//    implementation("com.github.javafaker:javafaker:0.18")
+//    implementation("com.github.javafaker:javafaker:1.0.2")
 
     // Log
     implementation("org.slf4j:slf4j-api:2.0.17")
@@ -70,10 +70,9 @@ tasks.test {
 //        exceptionFormat = "full"
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
-//    test.outputs.upToDateWhen { false } - fixme не работает
+//    test.outputs.upToDateWhen { false }  //fixme не работает
     //если код (output ы) не менялся то gradle код не меняет,
     // сейчас говорим что б он игнариловал outputs
-
 }
 
 
