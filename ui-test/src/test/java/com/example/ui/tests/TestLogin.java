@@ -1,4 +1,4 @@
-package com.example.tests;
+package com.example.ui.tests;
 
 import com.codeborne.selenide.Selenide;
 import org.testng.annotations.Test;
